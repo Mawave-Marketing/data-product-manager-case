@@ -1,4 +1,4 @@
-Case: Analytics Engineer
+## Case: Analytics Engineer
 We have been hired by a company to set up their modern data stack. In the first phase, they would like to be able to report on their sales operations. They're selling various products to customers globally. In this repository, you will find data covering information about customers, employees, orders, products and suppliers. Please use this data for the following tasks.
 
 Tasks
