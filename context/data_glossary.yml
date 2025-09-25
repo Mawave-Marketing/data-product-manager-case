@@ -1,0 +1,680 @@
+version: 2
+
+models:
+  - name: marketing_analytics_base
+    description: "Marketing Analytics Platform - Metriken und Dimensionen"
+    
+    columns:
+      # ============================================================================
+      # METRIKEN (MEASURES)
+      # ============================================================================
+      
+      # Rendite und Effizienz
+      - name: roas
+        description: "Return on Ad Spend - Verhältnis zwischen Umsatz und Werbeausgaben"
+        meta:
+          calculation: "sum(purchase_value) / nullif(sum(spend), 0)"
+          format: "Dezimalzahl (#,##0.00)"
+          category: "Rendite und Effizienz"
+          
+      - name: kur
+        description: "Marketing Efficiency Ratio - Kostenanteil am Umsatz (inverse ROAS)"
+        meta:
+          calculation: "sum(spend) / nullif(sum(purchase_value), 0)"
+          format: "Dezimalzahl"
+          category: "Rendite und Effizienz"
+      
+      # Kosten-Metriken
+      - name: cpm
+        description: "Cost per Mille - Kosten pro 1.000 Impressions"
+        meta:
+          calculation: "sum(spend) / nullif(sum(impressions) / 1000, 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+          
+      - name: cpc
+        description: "Cost per Click - Kosten pro Link-Klick"
+        meta:
+          calculation: "sum(spend) / nullif(sum(link_clicks), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+          
+      - name: cpo
+        description: "Cost per Order - Kosten pro Bestellung"
+        meta:
+          calculation: "sum(spend) / nullif(sum(purchases), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+          
+      - name: cpl
+        description: "Cost per Lead - Kosten pro generiertem Lead"
+        meta:
+          calculation: "sum(spend) / nullif(sum(leads), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+          
+      - name: cpr
+        description: "Cost per Registration - Kosten pro Registrierung"
+        meta:
+          calculation: "sum(spend) / nullif(sum(registrations), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+          
+      - name: cplp_view
+        description: "Cost per Landing Page View - Durchschnittliche Kosten pro Landing-Page-Aufruf"
+        meta:
+          calculation: "sum(spend) / nullif(sum(landing_page_views), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+          
+      - name: cppc
+        description: "Cost per Payment Completed - Kosten pro abgeschlossener Zahlung"
+        meta:
+          calculation: "sum(spend) / nullif(sum(payments), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Kosten-Metriken"
+      
+      # Zloty-spezifische Metriken
+      - name: cpo_zloty
+        description: "Kosten pro Bestellung in polnischen Zloty"
+        meta:
+          calculation: "sum(spend_zloty) / nullif(sum(purchases), 0)"
+          format: "Währung (PLN) mit 2 Nachkommastellen"
+          category: "Zloty-spezifische Metriken"
+          
+      - name: aov_zloty
+        description: "Durchschnittlicher Bestellwert in polnischen Zloty"
+        meta:
+          calculation: "sum(purchase_value_zloty) / nullif(sum(purchases), 0)"
+          format: "Währung (PLN) mit 2 Nachkommastellen"
+          category: "Zloty-spezifische Metriken"
+          
+      - name: cpc_zloty
+        description: "Kosten pro Klick in polnischen Zloty"
+        meta:
+          calculation: "sum(spend_zloty) / nullif(sum(link_clicks), 0)"
+          format: "Währung (PLN) mit 2 Nachkommastellen"
+          category: "Zloty-spezifische Metriken"
+          
+      - name: cpm_zloty
+        description: "Kosten pro 1.000 Impressionen in polnischen Zloty"
+        meta:
+          calculation: "sum(spend_zloty) / nullif(sum(impressions) / 1000, 0)"
+          format: "Währung (PLN) mit 2 Nachkommastellen"
+          category: "Zloty-spezifische Metriken"
+      
+      # Konversionsraten
+      - name: ctr
+        description: "Click-Through Rate - Verhältnis zwischen Link-Klicks und Impressions"
+        meta:
+          calculation: "sum(link_clicks) / nullif(sum(impressions), 0)"
+          format: "Prozent mit 2 Nachkommastellen"
+          category: "Konversionsraten"
+          
+      - name: cvr
+        description: "Conversion Rate - Verhältnis zwischen Käufen und Link-Klicks"
+        meta:
+          calculation: "sum(purchases) / nullif(sum(link_clicks), 0)"
+          format: "Prozent mit 2 Nachkommastellen"
+          category: "Konversionsraten"
+      
+      # Video-Metriken
+      - name: ssr
+        description: "Sound-on Share Rate - Anteil der Video-Views an den Impressions"
+        meta:
+          calculation: "sum(video_views) / nullif(sum(impressions), 0)"
+          format: "Prozent"
+          category: "Video-Metriken"
+          
+      - name: ssr_2sec
+        description: "Anteil der Video-Views (2 Sekunden) an Impressions für TikTok"
+        meta:
+          calculation: "Spezielle Berechnung für TikTok Ads"
+          format: "Dezimalzahl"
+          category: "Video-Metriken"
+          
+      - name: ssr_3sec
+        description: "Anteil der Video-Views (3 Sekunden) an Impressions für Meta/Pinterest"
+        meta:
+          calculation: "Spezielle Berechnung für Meta Ads und Pinterest"
+          format: "Dezimalzahl"
+          category: "Video-Metriken"
+      
+      # Durchschnittswerte
+      - name: aov
+        description: "Average Order Value - Durchschnittlicher Bestellwert"
+        meta:
+          calculation: "sum(purchase_value) / nullif(sum(purchases), 0)"
+          format: "Währung (EUR) mit 2 Nachkommastellen"
+          category: "Durchschnittswerte"
+          
+      - name: frequency
+        description: "Durchschnittliche Anzahl der Impressions pro erreichtem Nutzer"
+        meta:
+          calculation: "sum(impressions) / nullif(sum(reach), 0)"
+          format: "Dezimalzahl mit 2 Nachkommastellen"
+          category: "Durchschnittswerte"
+      
+      # E-Commerce Konversionen
+      - name: atc_pur_rate
+        description: "Add to Cart to Purchase Rate - Conversion Rate von Warenkorbhinzufügungen zu Käufen"
+        meta:
+          calculation: "sum(add_to_cart) / nullif(sum(purchases), 0)"
+          format: "Prozent"
+          category: "E-Commerce Konversionen"
+          
+      - name: cv_pur_rate
+        description: "Content View to Purchase Rate - Conversion Rate von Content Views zu Käufen"
+        meta:
+          calculation: "sum(content_views) / nullif(sum(purchases), 0)"
+          format: "Prozent"
+          category: "E-Commerce Konversionen"
+      
+      # Budget-Metriken
+      - name: recommended_daily_budget
+        description: "Empfohlenes tägliches Budget basierend auf CPO"
+        meta:
+          calculation: "(50 * CPO) / 7"
+          format: "Dezimalzahl"
+          category: "Budget-Metriken"
+          
+      - name: total_daily_budget
+        description: "Tatsächliche tägliche Ausgaben"
+        meta:
+          calculation: "sum(spend)"
+          format: "Dezimalzahl"
+          category: "Budget-Metriken"
+          
+      - name: budget_variance
+        description: "Abweichung zwischen tatsächlichem und empfohlenem Budget"
+        meta:
+          calculation: "Komplexe Berechnung mit Fallunterscheidungen für Null-Werte"
+          format: "Prozent"
+          category: "Budget-Metriken"
+
+      # ============================================================================
+      # DIMENSIONEN
+      # ============================================================================
+      
+      # Anzeigen-bezogene Dimensionen
+      - name: ad_id
+        description: "Eindeutige ID der Anzeige"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          
+      - name: ad_name
+        description: "Name der Anzeige"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          
+      - name: ad_type
+        description: "Typ der Anzeige"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          
+      - name: ad_is_active
+        description: "Boolean-Wert, der anzeigt, ob die Anzeige aktiv ist"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          data_type: "boolean"
+          
+      - name: ad_is_boosted
+        description: "Boolean-Wert, der anzeigt, ob die Anzeige geboostet wurde"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          data_type: "boolean"
+          
+      - name: ad_ads_manager_link
+        description: "Direkter Link zum Ads Manager für diese Anzeige"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          
+      - name: ad_ads_manager_link_html
+        description: "HTML-formatierter Link zum Ads Manager"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+          
+      - name: ad_id_report_date
+        description: "Kombination aus Anzeigen-ID und Berichtsdatum"
+        meta:
+          category: "Anzeigen-bezogene Dimensionen"
+      
+      # Kampagnen-bezogene Dimensionen
+      - name: campaign_id
+        description: "Eindeutige ID der Kampagne"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          
+      - name: campaign_name
+        description: "Name der Kampagne"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          
+      - name: campaign_type
+        description: "Typ der Kampagne"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          
+      - name: campaign_is_active
+        description: "Boolean-Wert, der anzeigt, ob die Kampagne aktiv ist"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          data_type: "boolean"
+          
+      - name: campaign_objective
+        description: "Zielsetzung der Kampagne"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          
+      - name: campaign_ads_manager_link
+        description: "Direkter Link zum Ads Manager für diese Kampagne"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          
+      - name: campaign_ads_manager_link_html
+        description: "HTML-formatierter Link zum Kampagnen-Manager"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+          
+      - name: campaign_tag
+        description: "Tag zur Kategorisierung der Kampagne"
+        meta:
+          category: "Kampagnen-bezogene Dimensionen"
+      
+      # Anzeigengruppen-Dimensionen
+      - name: ad_set_id
+        description: "Eindeutige ID der Anzeigengruppe"
+        meta:
+          category: "Anzeigengruppen-Dimensionen"
+          
+      - name: ad_set_name
+        description: "Name der Anzeigengruppe"
+        meta:
+          category: "Anzeigengruppen-Dimensionen"
+      
+      # Tracking und Attribution
+      - name: attribution_window
+        description: "Zeitfenster für die Zuordnung von Conversions"
+        meta:
+          category: "Tracking und Attribution"
+          
+      - name: default_attribution_window
+        description: "Standard-Attributionsfenster für die Plattform"
+        meta:
+          category: "Tracking und Attribution"
+      
+      # Plattform und Account
+      - name: platform
+        description: "Werbe-Plattform (Meta, Pinterest, TikTok)"
+        meta:
+          category: "Plattform und Account"
+          
+      - name: platform_account_id
+        description: "ID des Werbekontos"
+        meta:
+          category: "Plattform und Account"
+          
+      - name: platform_account_currency
+        description: "Währung des Werbekontos"
+        meta:
+          category: "Plattform und Account"
+      
+      # Kreativ-Dimensionen
+      - name: creative_type
+        description: "Art des Kreativmaterials"
+        meta:
+          category: "Kreativ-Dimensionen"
+          
+      - name: creative_thumbnail_html
+        description: "HTML für die Vorschau des Kreativmaterials"
+        meta:
+          category: "Kreativ-Dimensionen"
+      
+      # Tagging-Dimensionen
+      - name: angle_tag
+        description: "Tag für den gewählten Werbewinkel"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: hook_tag
+        description: "Tag für den verwendeten Hook"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: cta_tag
+        description: "Tag für den Call-to-Action"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: persona_tag
+        description: "Tag für die Zielgruppen-Persona"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: target_group_tag
+        description: "Tag für die Zielgruppe"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: layout_tag
+        description: "Tag für das Layout"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: variant_tag
+        description: "Tag für die Variante"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: copy_tag
+        description: "Tag für den Werbetext"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: model_tag
+        description: "Tag für das verwendete Modell"
+        meta:
+          category: "Tagging-Dimensionen"
+          
+      - name: group_tag
+        description: "Gruppierungs-Tag"
+        meta:
+          category: "Tagging-Dimensionen"
+      
+      # Zielwerte und Budget
+      - name: budget
+        description: "Festgelegtes Budget"
+        meta:
+          category: "Zielwerte und Budget"
+          
+      - name: budget_id
+        description: "Eindeutige ID des Budgets"
+        meta:
+          category: "Zielwerte und Budget"
+          
+      - name: target_cac
+        description: "Ziel-Customer Acquisition Cost"
+        meta:
+          category: "Zielwerte und Budget"
+          
+      - name: target_id
+        description: "Eindeutige ID des Ziels"
+        meta:
+          category: "Zielwerte und Budget"
+          
+      - name: target_new_customer_share
+        description: "Zielvorgabe für den Anteil an Neukunden"
+        meta:
+          category: "Zielwerte und Budget"
+      
+      # Geo-Targeting
+      - name: country
+        description: "Zielland"
+        meta:
+          category: "Geo-Targeting"
+          
+      - name: region
+        description: "Zielregion"
+        meta:
+          category: "Geo-Targeting"
+      
+      # Zeitliche Dimensionen
+      - name: report_date
+        description: "Datum des Berichts"
+        meta:
+          category: "Zeitliche Dimensionen"
+          data_type: "date"
+          
+      - name: calendar_week
+        description: "Kalenderwoche"
+        meta:
+          category: "Zeitliche Dimensionen"
+      
+      # Client-bezogene Dimensionen
+      - name: client_name
+        description: "Name des Kunden"
+        meta:
+          category: "Client-bezogene Dimensionen"
+          
+      - name: client_project_name
+        description: "Name des Kundenprojekts"
+        meta:
+          category: "Client-bezogene Dimensionen"
+          
+      - name: client_name_date_concat
+        description: "Kombination aus Kundenname und Berichtsdatum"
+        meta:
+          category: "Client-bezogene Dimensionen"
+      
+      # Conversion-Dimensionen
+      - name: conversion_goal
+        description: "Definiertes Conversion-Ziel"
+        meta:
+          category: "Conversion-Dimensionen"
+          
+      - name: custom_conversion_goal_id
+        description: "ID des benutzerdefinierten Conversion-Ziels"
+        meta:
+          category: "Conversion-Dimensionen"
+      
+      # Performance-Indikatoren (Basis-Dimensionen)
+      - name: impressions
+        description: "Anzahl der Anzeigeneinblendungen"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: clicks
+        description: "Gesamtanzahl der Klicks"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: link_clicks
+        description: "Anzahl der Link-Klicks"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: button_clicks
+        description: "Anzahl der Button-Klicks"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: reach
+        description: "Anzahl der erreichten einzelnen Nutzer"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: engagement
+        description: "Interaktionen mit der Anzeige"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: landing_page_views
+        description: "Anzahl der Landing-Page-Aufrufe"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: content_views
+        description: "Anzahl der Content-Aufrufe"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: purchases
+        description: "Anzahl der Käufe"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: purchase_value
+        description: "Umsatz in Originalwährung"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "decimal"
+          
+      - name: purchase_value_zloty
+        description: "Umsatz in Zloty"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "decimal"
+          
+      - name: spend
+        description: "Ausgaben in Originalwährung"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "decimal"
+          
+      - name: spend_eur
+        description: "Ausgaben in EUR"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "decimal"
+          
+      - name: spend_zloty
+        description: "Ausgaben in Zloty"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "decimal"
+          
+      - name: spend_in_eur
+        description: "Alternative Ausgaben in EUR"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "decimal"
+          
+      - name: leads
+        description: "Anzahl der generierten Leads"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+          
+      - name: payments
+        description: "Anzahl der Zahlungen"
+        meta:
+          category: "Performance-Indikatoren"
+          data_type: "integer"
+      
+      # Video-spezifische Dimensionen
+      - name: video_views
+        description: "Gesamtanzahl der Video-Views"
+        meta:
+          category: "Video-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: video_views_p25
+        description: "Video-Views bis 25%"
+        meta:
+          category: "Video-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: video_views_p50
+        description: "Video-Views bis 50%"
+        meta:
+          category: "Video-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: video_views_p75
+        description: "Video-Views bis 75%"
+        meta:
+          category: "Video-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: video_views_p100
+        description: "Video-Views bis 100%"
+        meta:
+          category: "Video-spezifische Dimensionen"
+          data_type: "integer"
+      
+      # App-spezifische Dimensionen
+      - name: app_activations
+        description: "Anzahl der App-Aktivierungen"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_registrations
+        description: "Anzahl der App-Registrierungen"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_purchases
+        description: "Anzahl der In-App-Käufe"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_installs
+        description: "Anzahl der App-Installationen"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_subscriptions
+        description: "Anzahl der App-Abonnements"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_conversions
+        description: "Anzahl der App-Conversions"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_start_trials
+        description: "Anzahl der gestarteten Testversionen"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: app_logins
+        description: "Anzahl der App-Logins"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+          
+      - name: initiated_app_checkouts
+        description: "Anzahl der initiierten App-Checkouts"
+        meta:
+          category: "App-spezifische Dimensionen"
+          data_type: "integer"
+      
+      # E-Commerce Dimensionen
+      - name: add_to_cart
+        description: "Anzahl der Warenkorbhinzufügungen"
+        meta:
+          category: "E-Commerce Dimensionen"
+          data_type: "integer"
+          
+      - name: registrations
+        description: "Anzahl der Registrierungen"
+        meta:
+          category: "E-Commerce Dimensionen"
+          data_type: "integer"
+      
+      # Flags und Kategorisierungen
+      - name: bfcm
+        description: "Flag für Black Friday/Cyber Monday Kampagnen"
+        meta:
+          category: "Flags und Kategorisierungen"
+          data_type: "boolean"
+          
+      - name: test_flag
+        description: "Kennzeichnung für Test-Kampagnen"
+        meta:
+          category: "Flags und Kategorisierungen"
+          data_type: "boolean"
+      
+      # Sonstige
+      - name: ad_actions
+        description: "Verschiedene Anzeigenaktionen"
+        meta:
+          category: "Sonstige"
+          data_type: "unknown"
