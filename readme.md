@@ -1,38 +1,120 @@
-## Case: Analytics Engineer
-We have been hired by a company to set up their modern data stack. In the first phase, they would like to be able to report on their sales operations. They're selling various products to customers globally. In this repository, you will find data covering information about customers, employees, orders, products and suppliers. Please use this data for the following tasks.
+# Case Study: Data Product Manager - Marketing Analytics Platform
 
-Tasks
-The data is available as CSV files in the data/ directory, or as a SQLite database data.sqlite with the data already pre-populated into tables.
+## Kontext
 
-You can choose to directly use the SQLite database, or load the CSV files into a database of your choice, e.g. BigQuery or PostgreSQL.
+Mawave, eine digitale Marketingagentur, möchte ihre Datenplattform erweitern, um bessere Einblicke in die Performance ihrer Kundenkampagnen und interne Ressourcenplanung zu ermöglichen. Als Data Product Manager sollen Sie eine neue Datenprodukt-Initiative leiten.
 
-Using dbt, create a project with the necessary transformations to create the following models:
+## Ihre Aufgabe (3-6 Stunden)
 
-A transactional fact table for sales, with the grain set at the product level, and the following additional dimensions and metrics:
+**Szenario:** Das Management möchte ein neues "Campaign Performance Dashboard" entwickeln, das Marketing-Teams und Kunden einheitliche, plattformübergreifende Insights bietet. Gleichzeitig sollen interne Teams bessere Einblicke in Ressourcenallokation und Profitabilität erhalten.
 
-new or returning customer
-number of days between first purchase and last purchase
-A dimension table for “customers”, with the grain set at the customer_id, and the following additional dimensions and metrics:
+### Gegebene Daten
 
-number of orders
-value of most expensive order
-whether it’s one of the top 10 customers (by revenue generated)
-A dimension table for monthly cohorts, with the grain set at country leveland the following additional dimensions and metrics:
+Sie erhalten vereinfachte CSV-Datensätze, die folgende Bereiche abdecken:
 
-Number of customers in the monthly cohort (customers are assigned in cohorts based on date of their first purchase)
-Cohort's total order value
-Note: Every cohort should be available, even when the business didn't acquire a new customer that month (for the full timerange of order dates).
-Push your project to a repository that we can access (ideally a public repo). You can create a new repository or fork from this one, but do not push your code to this repository.
+- `ad_metrics.csv` - Kampagnen-Performance (Meta, Google Ads, TikTok, Pinterest)
+- `time_tracking.csv` - Mitarbeiter-Zeiterfassung (Clockify-ähnlich)
+- `clients.csv` - Kundenstammdaten
+- `projects.csv` - Projekt-Informationen
+- `employees.csv` - Mitarbeiterdaten
 
-If you choose to use the SQLite database, you can also include the updated database file with your models in the repository.
+## Tasks
 
-Send the link to the repository to the person who provided you this case.
+### Teil 1: Datenarchitektur & dbt-Implementierung (2-3 Stunden)
 
-What we’ll be evaluating your submissions on
-Your code is accurate, easy to read & interpret and shows a tendency for reusability & maintainability.
-Your project and code structure follows modelling best practices (we use the Best Practice Guides from dbt), and considers the business / data at hand.
-Your code is valid and provides correct results and actionable models for analysts.
-Note
-If you have any questions or you get stuck in any of the steps, especially the setup, don't hesitate to reach out to us! You can create an issue here, or alternatively, reach out to us via email (through the person who sent you this case).
+Erstellen Sie ein dbt-Projekt mit folgender Struktur:
 
-We do our best to improve our technical tasks, so please let us know your feedback and what you thought of this task :)
+1. **Integration Layer (IL)**: Raw Data Ingestion
+2. **Cleansing Layer (CL)**: Data Cleaning & Standardization
+3. **Operational Layer (OL)**: Business-ready models
+4. **Business Layer (BL)**: KPI & Reporting models
+
+#### Spezifische Models zu entwickeln:
+
+**Operational Layer:**
+- `ol_unified_ad_metrics` - Plattformübergreifende Kampagnen-Metriken
+- `ol_client_projects_with_time` - Client-Projekte mit Zeitaufwand
+- `ol_campaign_profitability` - Kampagnen mit Kostenschätzungen
+
+**Business Layer:**
+- `bl_client_performance_dashboard` - Hauptmodel für Client-Dashboard
+- `bl_resource_utilization` - Mitarbeiter-Auslastung nach Kunden/Projekten
+- `bl_monthly_campaign_cohorts` - Monatliche Performance-Kohorten nach Kunden
+
+### Teil 2: Stakeholder Management & Business Requirements (1-2 Stunden)
+
+Erstellen Sie ein Dokument mit:
+
+1. **Data Product Vision**: Beschreibung des Campaign Performance Dashboards
+2. **Stakeholder Mapping**: Identifizierung und Analyse der verschiedenen Nutzergruppen
+3. **KPI Framework**: Definition der wichtigsten Metriken für verschiedene Zielgruppen
+4. **Implementation Roadmap**: Priorisierte Entwicklungsschritte
+
+### Teil 3: Datenqualität & Governance (30-60 Minuten)
+
+Implementieren Sie:
+
+- dbt-Tests für kritische Datenqualitätsprüfungen
+- Dokumentation der wichtigsten Models in YAML-Dateien
+- Data Lineage-Überlegungen
+
+## Erwartete Deliverables
+
+### 1. dbt-Projekt (öffentliches Git-Repository)
+
+- Vollständige Modell-Hierarchie (IL → CL → OL → BL)
+- Mindestens 3 aussagekräftige dbt-Tests
+- YAML-Dokumentation für BL-Models
+- README mit Setup-Anweisungen
+
+### 2. Product Strategy Dokument (2-3 Seiten)
+
+- Business Case für das Data Product
+- Stakeholder-Analyse
+- KPI-Framework
+- Implementation Roadmap mit Zeitschätzungen
+
+### 3. SQL-Beispiele
+
+Typische Analysen, die das Dashboard ermöglichen würde
+
+## Bewertungskriterien
+
+### Technische Exzellenz (40%)
+- Saubere, modulare dbt-Implementierung
+- Korrekte Anwendung der Layer-Architektur
+- Effiziente SQL-Performance-Überlegungen
+- Angemessene Datenqualitäts-Tests
+
+### Product Thinking (40%)
+- Klare Business-Value-Argumentation
+- Realistische Stakeholder-Analyse
+- Durchdachtes KPI-Framework
+- Pragmatische Roadmap-Priorisierung
+
+### Data Governance (20%)
+- Dokumentation und Lineage-Verständnis
+- Sicherheitsüberlegungen (PII, Client-Daten)
+- Skalierbarkeits-Konzepte
+
+## 📊 Sample-Daten
+
+### Verfügbare Datensätze:
+
+#### `ad_metrics.csv` (ca. 1000 Zeilen)
+- Realistische Kampagnen-Performance verschiedener Plattformen
+- Verschiedene Attribution Windows
+- Client-spezifische Variationen
+
+#### `time_tracking.csv` (ca. 500 Zeilen)
+- Mitarbeiter-Zeiterfassung auf Projekte
+- Verschiedene Abteilungen/Rollen
+- Realistische Stundensätze
+
+#### `clients.csv` (ca. 20 Kunden)
+- Verschiedene Branchen
+- Unterschiedliche Vertragsgrößen
+
+---
+
+*Diese Case Study ermöglicht es Bewerbern, mit realistischen Datenmengen zu arbeiten, wie sie in einem echten Unternehmensumfeld anzutreffen sind.*
