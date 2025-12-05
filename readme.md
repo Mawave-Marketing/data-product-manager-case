@@ -12,8 +12,10 @@ Mawave, eine digitale Marketingagentur, möchte ihre Datenplattform erweitern, u
 
 Sie erhalten vereinfachte CSV-Datensätze, die folgende Bereiche abdecken:
 
-- `ad_metrics.csv` - Kampagnen-Performance (Meta, Google Ads, TikTok, Pinterest)
-- `time_tracking.csv` - Mitarbeiter-Zeiterfassung (Clockify-ähnlich)
+- `ad_metrics.csv` - Kampagnen-Performance mit detaillierten Metriken (Meta, Google Ads, TikTok, Pinterest)
+- `campaigns.csv` - Kampagnen-Stammdaten (Plattform, Budget, Status)
+- `social_metrics.csv` - Organische Social Media Performance (Instagram, Facebook)
+- `time_tracking.csv` - Mitarbeiter-Zeiterfassung auf Projekt-Ebene (Clockify-ähnlich)
 - `clients.csv` - Kundenstammdaten
 - `projects.csv` - Projekt-Informationen
 - `employees.csv` - Mitarbeiterdaten
@@ -47,8 +49,15 @@ Erstellen Sie ein Dokument mit:
 
 1. **Data Product Vision**: Beschreibung des Campaign Performance Dashboards
 2. **Stakeholder Mapping**: Identifizierung und Analyse der verschiedenen Nutzergruppen
+   - **Nutzergruppen** (intern): Marketing Strategists, Account Managers, Finance/Controlling, Data Analysts
+   - **Zielgruppen** (extern): Kunden mit read-only Dashboard-Zugriff
 3. **KPI Framework**: Definition der wichtigsten Metriken für verschiedene Zielgruppen
+   - Campaign Performance KPIs (ROAS, CPA, CTR, CVR)
+   - Resource Allocation KPIs (Utilization Rate, Cost per Client)
+   - Profitability KPIs (Project Margin, Client Lifetime Value)
 4. **Implementation Roadmap**: Priorisierte Entwicklungsschritte
+
+**Hinweis:** Das "Dashboard" bezieht sich auf die **dbt Business Layer Models**, nicht auf die tatsächliche BI-Visualisierung (Looker, Tableau, etc.).
 
 ### Teil 3: Datenqualität & Governance (30-60 Minuten)
 
@@ -101,19 +110,43 @@ Typische Analysen, die das Dashboard ermöglichen würde
 
 ### Verfügbare Datensätze:
 
-#### `ad_metrics.csv` (ca. 1000 Zeilen)
-- Realistische Kampagnen-Performance verschiedener Plattformen
-- Verschiedene Attribution Windows
-- Client-spezifische Variationen
+#### `ad_metrics.csv` (~9000 Zeilen)
+- Realistische Kampagnen-Performance verschiedener Plattformen (Meta Ads, TikTok Ads)
+- **5 verschiedene Attribution Windows**: 1d_click, 7d_click, 28d_click, 1d_view, 7d_view
+- Tägliche Metriken: spend, impressions, clicks, conversions, CPM, CTR, CVR, CPC, CPA, revenue, ROAS
+- Client-spezifische Variationen über Zeitraum 2024
 
-#### `time_tracking.csv` (ca. 500 Zeilen)
-- Mitarbeiter-Zeiterfassung auf Projekte
+#### `campaigns.csv` (~120 Zeilen)
+- Kampagnen-Stammdaten von Ad Platforms
+- Plattformen: Meta Ads, TikTok Ads, Google Ads, Pinterest Ads
+- Status: ACTIVE, PAUSED, ARCHIVED
+
+#### `social_metrics.csv` (500 Zeilen)
+- Social Media Performance von Instagram und Facebook
+- Täglich erfasste Metriken: engaged_users, new_followers, total_followers, impressions, profile_views, website_clicks
+- Zeitraum: Januar - April 2024
+
+#### `time_tracking.csv` (~1000 Zeilen)
+- Mitarbeiter-Zeiterfassung aus internem System
 - Verschiedene Abteilungen/Rollen
-- Realistische Stundensätze
+- Stundensätze und berechnete Kosten
+- **is_productive**: Boolean flag für billable client work (true) vs. internal/admin work (false)
+- Zeitraum: 2024
 
-#### `clients.csv` (ca. 20 Kunden)
-- Verschiedene Branchen
-- Unterschiedliche Vertragsgrößen
+#### `clients.csv` (~184 Kunden)
+- Verschiedene Branchen (Food & Beverage, Tech, Fashion, Travel, etc.)
+- Primary und Secondary Industry Kategorisierung
+- Alle Kunden basieren in Deutschland
+
+#### `projects.csv` (~184 Projekte)
+- Ein "Main Campaign" Projekt pro Client
+- Projektlaufzeit: 2024-01-01 bis 2024-12-31
+- Monatliche Budgets
+
+#### `employees.csv` (~80 Mitarbeiter)
+- Verschiedene Departments: Paid Media, Data & Analytics, Strategy, Paid Content, Organic Social
+- Stundensätze nach Department (€75-95/Stunde)
+- Team Codes und Status
 
 ---
 

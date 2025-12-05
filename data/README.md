@@ -33,66 +33,97 @@ This dataset contains anonymized sample data extracted from a real digital marke
 **Business Context:** Typical digital agency structure with specialized teams
 
 ### 3. Time Tracking (`time_tracking.csv`)
-**Description:** 6 months of employee time tracking data
+**Description:** Employee time tracking data
 - `employee_id`: Links to employees table
-- `employee_name`: Anonymized employee name
-- `client_id`: Links to clients table  
-- `client_name`: Anonymized client name
+- `employee_name`: Employee name
+- `client_id`: Client identifier
+- `client_name`: Client name
+- `project_id`: Project identifier
 - `report_date`: Date of work performed
 - `hours_worked`: Hours logged (decimal format)
-- `department_name`: Department of employee
-- `cost_eur`: Calculated cost (hours * hourly rate)
-- `is_productive`: Boolean flag for productive vs non-productive time
+- `department_name`: Department name
+- `cost_eur`: Calculated cost
+- `is_productive`: Boolean flag
 
 **Row Count:** ~1,000 records
-**Date Range:** Last 6 months
-**Business Context:** Real project time allocation patterns showing client work distribution
+**Date Range:** 2024
+**Business Context:** Time allocation data from internal systems
 
 ### 4. Projects (`projects.csv`)
 **Description:** Client project information
 - `project_id`: Unique project identifier
 - `client_id`: Links to clients table
 - `client_name`: Anonymized client name
-- `project_name`: Simplified as 'Main Campaign'
+- `project_name`: Simplified as 'Main Campaign' (one project per client)
 - `project_start_date`: Project start (2024-01-01)
-- `project_end_date`: Project end (2024-12-31)  
+- `project_end_date`: Project end (2024-12-31)
 - `monthly_budget_eur`: Fixed at €5,000 for simplification
 
-**Row Count:** ~50 records
-**Business Context:** Ongoing client campaigns and projects
+**Row Count:** ~184 records (one per client)
+**Business Context:** Ongoing client campaigns and projects throughout 2024
 
 ### 5. Campaigns (`campaigns.csv`)
-**Description:** Digital advertising campaign data
+**Description:** Digital advertising campaign metadata
 - `campaign_id`: Unique campaign identifier
-- `client_id`: Simplified client assignment
-- `client_name`: Anonymized client name
-- `campaign_name`: Anonymized as Campaign_1, Campaign_2, etc.
-- `platform`: Advertising platform (TikTok Ads, Google Ads, Meta Ads, Pinterest Ads)
+- `account_id`: Account identifier
+- `account_name`: Account name
+- `campaign_name`: Anonymized campaign name
+- `platform`: Advertising platform (Meta Ads, TikTok Ads, Google Ads, Pinterest Ads)
 - `start_date`: Campaign creation date
-- `campaign_status`: Campaign status (ACTIVE, PAUSED, etc.)
-- `daily_budget_eur`: Fixed at €1,000 for simplification
+- `campaign_status`: Campaign status (ACTIVE, PAUSED, ARCHIVED)
+- `daily_budget_eur`: Daily budget in EUR
 
-**Row Count:** ~100 records  
-**Date Range:** 2024 campaigns
+**Row Count:** ~120 records
+**Date Range:** 2024
 **Business Context:** Multi-platform advertising campaigns
 
-### 6. Social Media Metrics (`social_metrics.csv`)
-**Description:** Daily social media performance metrics from Instagram and Facebook
-- `client_id`: Anonymized client identifier (maps to clients table)
+### 6. Ad Performance Metrics (`ad_metrics.csv`)
+**Description:** Daily advertising performance data with multiple attribution windows
+- `campaign_id`: Links to campaigns table
+- `client_id`: Links to clients table
 - `client_name`: Anonymized client name
-- `report_date`: Date of the social media metrics
+- `platform`: Advertising platform (Meta Ads, TikTok Ads, Google Ads, Pinterest Ads)
+- `report_date`: Date of performance metrics
+- `attribution_window`: Attribution model used
+  - **1d_click**: 1-day click attribution
+  - **7d_click**: 7-day click attribution
+  - **28d_click**: 28-day click attribution
+  - **1d_view**: 1-day view-through attribution
+  - **7d_view**: 7-day view-through attribution
+- `spend_eur`: Daily ad spend in EUR
+- `impressions`: Total ad impressions
+- `clicks`: Total clicks on ads
+- `conversions`: Total conversions/purchases attributed
+- `cpm`: Cost per mille (thousand impressions)
+- `ctr`: Click-through rate (%)
+- `cvr`: Conversion rate (%)
+- `cpc`: Cost per click
+- `cpa`: Cost per acquisition/conversion
+- `revenue_eur`: Revenue generated from conversions
+- `roas`: Return on ad spend (revenue / spend)
+
+**Row Count:** ~9,000 records (daily data × campaigns × attribution windows)
+**Date Range:** Throughout 2024
+**Business Context:** Comprehensive paid advertising performance with multiple attribution models for accurate performance measurement
+
+### 7. Social Media Metrics (`social_metrics.csv`)
+**Description:** Daily social media performance metrics from Instagram and Facebook
+- `page_id`: Page identifier
+- `page_name`: Page name
+- `campaign_id`: Campaign identifier (where applicable)
+- `report_date`: Date of metrics
 - `platform`: Social media platform (Instagram, Facebook)
 - `engaged_users`: Number of users who engaged with content
 - `new_followers`: Daily new followers gained
 - `total_followers`: Total follower count
-- `impressions`: Total impressions for the day
-- `organic_impressions`: Organic impressions (non-paid)
+- `impressions`: Total impressions
+- `organic_impressions`: Organic impressions
 - `profile_views`: Number of profile views
-- `website_clicks`: Clicks to website from social media
+- `website_clicks`: Clicks to website
 
 **Row Count:** 500 records
-**Date Range:** January 2025 - April 2025
-**Business Context:** Real social media performance showing daily engagement patterns, follower growth, and website traffic from social platforms
+**Date Range:** January 2024 - April 2024
+**Business Context:** Social media performance metrics
 
 ## Data Quality Notes
 
@@ -106,16 +137,23 @@ This dataset contains anonymized sample data extracted from a real digital marke
 ### Data Relationships
 ```
 clients (1) ←→ (M) projects
-clients (1) ←→ (M) time_tracking  
 clients (1) ←→ (M) campaigns
+clients (1) ←→ (M) social_metrics
+
+projects (1) ←→ (M) time_tracking
+
+campaigns (1) ←→ (M) ad_metrics
+campaigns (1) ←→ (M) social_metrics (for correlation analysis)
+
 employees (1) ←→ (M) time_tracking
+
+clients.client_id = PRIMARY KEY (source of truth for client data)
 ```
 
-### Known Data Limitations
-- Some random budget values may not reflect realistic patterns
-- Time ranges limited to recent periods for privacy
-- Industry categories simplified
-- Campaign and social metrics use simplified client assignments for demonstration purposes
+### Data Notes
+- This dataset represents anonymized production data from multiple source systems
+- Standard data quality assessment and profiling is recommended before building production models
+- Consider exploring the data thoroughly to understand relationships and potential quality issues
 
 ## Business Questions for Analysis
 
